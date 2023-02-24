@@ -1,0 +1,1 @@
+sudo apt install  -y ros-noetic-jackal-control ros-noetic-jackal-description ros-noetic-jackal-navigation
