@@ -1,0 +1,31 @@
+<package format="2">
+  <name>lost_cargo_detection</name>
+  <version>0.0.1</version>
+  <description>
+  Package for detecting Lost Cargo
+  </description>
+  <maintainer email="sloretz@openrobotics.org">Kum Shen</maintainer>
+  <license>APACHE 2.0</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>message_generation</build_depend>
+  <build_depend>pcl</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>pcl_catkin</build_depend>
+  
+  <depend>pcl_conversions</depend>
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  
+  <depend>geometry_msgs</depend>
+  
+  <depend>pcl_ros</depend>
+
+  <depend>roslint</depend>
+  <depend>tf2_ros</depend>
+  <exec_depend>message_runtime</exec_depend>
+
+  <depend>std_msgs</depend>
+
+</package>

@@ -1,0 +1,20 @@
+<launch>
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find lost_cargo_detection)/rviz/temp.rviz" />
+
+  <include file="$(find point_cloud_converter)/launch/point_cloud_converter.launch" />
+
+  <arg name="use_lost_cargo_node" default="false"/>
+
+  <group if="$(arg use_lost_cargo_node)">
+    <node pkg="lost_cargo_detection" name="lost_cargo_detection_node" type="new_LC.py" output="screen"> 
+    </node>
+
+    
+
+    </group>
+ 
+<node pkg="pcl_tutorials_ros" name="filtering_node" type="filtering" output="screen"> 
+    </node>
+ 
+
+</launch>
