@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="model_name" default="w115"/>  <!--prius , w115-->
+  <arg name="world_file_name" default="autoware"/> <!--mcity , mcity_modified--><!-- mcity_TEST--><!-- autoware-->
+  <!-- 9 is the only one with dynamic objs but it is heavy -->
+  <!-- mcity -->
+  <!-- mcity_static_comp for static -->
+  <arg name="gpu" default="true"/>
+  <arg name="world_model_path" default="$(find car_demo)/worlds/$(arg world_file_name).world"/>
+
+
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="verbose" default="false"/>
+  <arg name="world_name" default="$(find velodyne_description)/world/example.world"/>
+
+
+  
+  <arg name="model" default="$(find prius_description)/urdf/$(arg model_name).urdf"/>
+  <arg name="rvizconfig" default="$(find car_demo)/rviz/demo.rviz" />
+
+  
+  
+  <!-- Start gazebo and load the world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" >
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="headless" value="$(arg headless)"/>
+    <arg name="debug" value="$(arg debug)"/>
+    <arg name="verbose" value="$(arg verbose)"/>
+    <arg name="world_name" value="$(arg world_name)"/>
+  </include>
+
+
+
+   <!-- Spawn the example robot -->
+  
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find prius_description)/urdf/w115.urdf' gpu:=$(arg gpu)" />
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_model" args="-urdf -param /robot_description -model w115"/>
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="30.0" />
+  </node>
+  
+  
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+</launch>
