@@ -1,0 +1,33 @@
+
+   <xacro:arg name="gpu" default="false"/>
+  <xacro:property name="gpu" value="$(arg gpu)" />
+ 
+
+    <xacro:include filename="$(find velodyne_description)/urdf/HDL-32E.urdf.xacro"/>
+  <xacro:HDL-32E parent="base_link" name="velodyne2" topic="/velodyne_points2" hz="10" samples="220" gpu="${gpu}">
+    <origin xyz="0 0 0.6" rpy="0 0 0" />
+  </xacro:HDL-32E>
+
+
+
+<!-- VLP-16 Centre -->
+  <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
+    <xacro:VLP-16 parent="base_link" name="velodyne" topic="/velodyne_points"  hz="15" samples="440" gpu="${gpu}">
+      <origin xyz="0 0 0.4" rpy="0 0 0" />
+  </xacro:VLP-16>
+
+
+
+  <!-- VLP-16 FL-->
+  <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
+    <xacro:VLP-16 parent="base_link" name="velodyne_front_left" topic="/velodyne_points_front_left"  hz="15" samples="440" gpu="${gpu}">
+      <origin xyz="1 -0.2 0.2" rpy="0 0 0" />
+  </xacro:VLP-16>
+
+
+
+  <!-- VLP-16 FR -->
+  <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
+    <xacro:VLP-16 parent="base_link" name="velodyne_front_right" topic="/velodyne_points_right_right"  hz="15" samples="440" gpu="${gpu}">
+      <origin xyz="1 0.2 0.2" rpy="0 0 0" />
+  </xacro:VLP-16>
