@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="model_name" default="w115"/>  <!--prius , w115-->
+  <arg name="world_file_name" default="mcity_TEST"/> <!--mcity , mcity_modified--><!-- mcity_TEST--><!-- autoware-->
+  <!-- 9 is the only one with dynamic objs but it is heavy -->
+  <!-- mcity -->
+  <arg name="ns" default="/autoware_gazebo"/>
+  <arg name="gpu" default="false"/>
+  <arg name="world_model_path" default="$(find car_demo)/worlds/$(arg world_file_name).world"/>
+
+  
+  <arg name="model" default="$(find prius_description)/urdf/$(arg model_name).urdf"/>
+  <arg name="rvizconfig" default="$(find car_demo)/rviz/demo.rviz" />
+
+  <param name="robot_description" command="$(find xacro)/xacro.py --inorder $(arg model) gpu:=$(arg gpu)" />
+  
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="verbose" value="true"/>
+    <arg name="world_name" default="$(arg world_model_path)"/>
+    <!-- <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/> -->
+  </include>
+
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
+    <!-- <remap from="robot_description" to="different_robot_description" /> -->
+    <!-- <remap from="joint_states" to="/prius/joint_states" /> -->
+  </node>
+  <node pkg="fake_localization" type="fake_localization" name="fake_localization">
+    <!-- <remap from="base_pose_ground_truth" to="/prius/base_pose_ground_truth"/> -->
+  </node>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="very_inaccurate_odom" args="0 0 0 0 0 0 odom base_link"/>
+  <node pkg="car_demo" type="joystick_translator" name="joystick_translator"/>
+
+  <!-- Run two joy nodes publishing to the same topic, just to cover two possible joystick locations -->
+  <node pkg="joy" type="joy_node" name="joy_node0">
+    <param name="dev" value="/dev/input/js0"/>
+  </node>
+  <node pkg="joy" type="joy_node" name="joy_node1">
+    <param name="dev" value="/dev/input/js1"/>
+  </node>
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -x 4.5 -y .2 -z 0.5 -model prius"/>
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+</launch>
